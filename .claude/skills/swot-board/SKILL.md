@@ -1,6 +1,6 @@
 ---
 name: swot-board
-description: Build a decision-grade SWOT for a small business — pulls what it can from the business context files, fills the gaps in a short interview, researches the competitors the user names by reading their websites (with an optional Apify path for their social accounts), and produces a Hebrew HTML board plus a prioritised list of moves derived from the crossings. Use when the user asks for a SWOT, a strategic snapshot, where the business stands versus competitors, or says things like "תבנה לי SWOT", "ניתוח SWOT לעסק שלי", "איפה אני עומד מול המתחרים", "מה החוזקות והחולשות שלי", "build me a SWOT", "strategic analysis of my business".
+description: Build a decision-grade SWOT for a small business — pulls what it can from the business context files, fills the gaps in a short interview, researches the competitors the user names by reading their public websites (no API keys), and produces a Hebrew HTML board plus a prioritised list of moves derived from the crossings. Use when the user asks for a SWOT, a strategic snapshot, where the business stands versus competitors, or says things like "תבנה לי SWOT", "ניתוח SWOT לעסק שלי", "איפה אני עומד מול המתחרים", "מה החוזקות והחולשות שלי", "build me a SWOT", "strategic analysis of my business".
 ---
 
 # SWOT שמסתיים בהחלטות
@@ -9,7 +9,7 @@ description: Build a decision-grade SWOT for a small business — pulls what it 
 אותו מתרגיל אקדמי לכלי: **רשימת מהלכים מתועדפת** שנגזרת מההצלבות בין המשבצות.
 
 הניתוח נשען על שלושה מקורות: מה שכבר כתוב על העסק בקבצי הקונטקסט, ראיון קצר
-שמשלים רק את החסר, ומחקר על המתחרים שהמשתמש מציין.
+שמשלים רק את החסר, ומחקר על אתרי המתחרים שהמשתמש מציין. בלי מפתחות, בלי מנויים.
 
 **כל ריצה נשמרת כסנפשוט.** בפעם הבאה הלוח מראה מה זז.
 
@@ -20,7 +20,7 @@ description: Build a decision-grade SWOT for a small business — pulls what it 
 ## הכללים שלא נשברים
 
 1. **לכל ממצא יש מקור.** כל פריט בכל משבצת נושא את המקור שלו: `קונטקסט` ·
-   `ראיון` · `אתר מתחרה` + URL · `רשתות` + לינק. **פריט בלי מקור לא נכנס ללוח.**
+   `ראיון` · `אתר מתחרה` + URL. **פריט בלי מקור לא נכנס ללוח.**
 2. **עובדה נפרדת מהתרשמות.** "המתחרה מפרסם מחירים באתר" זו עובדה עם URL.
    "הם מכוונים לקהל צעיר" זו התרשמות — נכתבת עם `נראה ש...` ומסומנת בלוח.
 3. **לא ממציאים שוק.** אין דאטה על גודל שוק, מגמה או נתח — **לא כותבים אחד.**
@@ -28,12 +28,10 @@ description: Build a decision-grade SWOT for a small business — pulls what it 
 4. **המשתמש קובע מי מתחרה.** הסקיל יכול להציע מועמדים, אבל לא מכניס אף אחד
    לניתוח בלי אישור מפורש. מתחרה שגוי מזהם את כל ה-O וה-T.
 5. **דין וחשבון על כיסוי.** בראש הלוח ובראש הדוח: כמה מתחרים נבדקו, אילו אתרים
-   נקראו בפועל, והאם מסלול הרשתות רץ. **מסלול שלא רץ נאמר ראשון, לא בהערת שוליים.**
-6. **הרשתות הן מסלול אופציונלי.** בלי Apify הסקיל מייצר SWOT מלא — ואומר בכנות
-   שהניתוח מבוסס על אתרים ותוכן ציבורי בלבד. **אף פעם לא עוצרים ריצה כדי לדרוש מנוי.**
-7. **סודות בקובץ.** מפתחות רק ב-`.env` שנמצא ב-`.gitignore`. לא בצ'אט, לא בפלט.
-8. **גבולות תפקיד.** הכלי עונה על שאלה אחת: איפה העסק עומד ומה לעשות עם זה.
-   הוא לא תוכנית עסקית, לא תחזית הכנסות, ולא מחקר מתחרים מלא ברשתות.
+   נקראו בפועל, ואילו שאלות דולגו. **מה שלא נבדק נאמר ראשון, לא בהערת שוליים.**
+6. **בלי מפתחות.** הסקיל קורא אתרים ציבוריים בלבד. לא מבקש מנוי, לא מבקש טוקן.
+7. **גבולות תפקיד.** הכלי עונה על שאלה אחת: איפה העסק עומד ומה לעשות עם זה.
+   הוא לא תוכנית עסקית, לא תחזית הכנסות, ולא מחקר מתחרים ברשתות החברתיות.
 
 ---
 
@@ -64,7 +62,6 @@ description: Build a decision-grade SWOT for a small business — pulls what it 
 |---|---|---|
 | קונטקסט עסקי | `business.md` / `business-context.md` — בשורש, ב-`context/`, ובתיקייה שמעליה | הרץ את האשף ב-`references/setup.md`. **בלי זה לא רצים** — אין SWOT בלי לדעת מה העסק מוכר ולמי |
 | מתחרים | `swot-settings.md` | ייבנה בשלב 2 |
-| מסלול רשתות | `APIFY_TOKEN` ב-`.env` | **ממשיכים בלי.** רושמים בשורת הכיסוי: "הרשתות של המתחרים לא נסרקו" |
 | סנפשוט קודם | `snapshots/*.json` | ריצה ראשונה — בלי השוואה |
 
 אם `swot-settings.md` קיים — קרא אותו, הצג מה כבר ידוע, והמשך.
@@ -92,7 +89,7 @@ description: Build a decision-grade SWOT for a small business — pulls what it 
 
 ## שלב 2 — מחקר המתחרים
 
-### מסלול ברירת מחדל — אתרים ותוכן ציבורי (בלי מפתחות, תמיד רץ)
+### אתרים ותוכן ציבורי — בלי מפתחות
 
 - **המשתמש נתן שמות או אתרים** → זה המקור. אמת שהאתר קיים ונגיש.
 - **המשתמש אמר "תמצא לי"** → חפש ברשת לפי תחום ואזור מהקונטקסט, הצג
@@ -104,17 +101,6 @@ description: Build a decision-grade SWOT for a small business — pulls what it 
 
 טווח מומלץ: **3–5 מתחרים.** גם מתחרה אחד זו ריצה תקינה — אבל אז לא מכלילים
 דפוסי שוק, ורושמים בלוח: *"הניתוח מבוסס על מתחרה אחד."*
-
-### מסלול אופציונלי — הרשתות שלהם (Apify)
-
-מסלול נוסף, לא תנאי. אם `APIFY_TOKEN` קיים — הצע אותו למשתמש והסבר בשורה אחת
-מה הוא מוסיף (תדירות, פורמטים, מה עובד להם בפועל). הפלואו ב-`references/research.md` §Apify.
-
-אם אין טוקן — **אל תבקש מהמשתמש לפתוח מנוי.** אמור בשורה אחת שיש מסלול
-נוסף למי שכבר עובד עם Apify, והמשך. הסקיל מסיים ריצה שלמה בלעדיו.
-
-> ⛔ מודעות לעלות: מסלול הרשתות צורך קרדיטים. ברירת מחדל 30 פוסטים למתחרה,
-> ולא יותר בלי בקשה מפורשת. כמה התבקש מול כמה חזר — נרשם בשורת הכיסוי.
 
 ---
 
@@ -182,7 +168,6 @@ SWOT — סטודיו אלומה · 4 מתחרים
 
 כיסוי:
   אתרים נקראו       4/4 ✅
-  רשתות (Apify)     לא רץ — אין APIFY_TOKEN. הניתוח מבוסס על אתרים ותוכן ציבורי
   שאלות ראיון       5/6 (דולגה: תלויות בספק — לא היה מידע)
 
 הלוח:  4 חוזקות · 3 חולשות · 5 הזדמנויות · 3 איומים

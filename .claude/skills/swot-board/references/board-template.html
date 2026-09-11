@@ -145,7 +145,7 @@ document.getElementById("date").textContent = "נבנה " + (DATA.generatedAt||D
   const c = DATA.coverage||{};
   let h = "<b>על מה הלוח מבוסס</b>";
   h += "נבדקו " + (c.competitors??0) + " מתחרים · " + (c.sitesRead??0) + " אתרים נקראו · ";
-  h += c.socialScanned ? "הרשתות נסרקו" : '<span class="warn">הרשתות של המתחרים לא נסרקו' + (c.socialReason? " ("+esc(c.socialReason)+")":"") + ' - הניתוח מבוסס על אתרים ותוכן ציבורי</span>';
+  h += "מבוסס על אתרים ותוכן ציבורי בלבד";
   if((c.skippedQuestions||[]).length) h += "<br>שאלות שדולגו בראיון: " + c.skippedQuestions.map(esc).join(" · ");
   if((c.competitors??0)===1) h += "<br>הניתוח מבוסס על מתחרה אחד - אין הכללה של דפוסי שוק.";
   document.getElementById("coverage").innerHTML = h;

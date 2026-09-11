@@ -17,8 +17,6 @@
   "coverage": {
     "competitors": 4,
     "sitesRead": 4,
-    "socialScanned": false,
-    "socialReason": "אין APIFY_TOKEN",
     "skippedQuestions": ["תלויות בספק"]
   },
   "competitors": [
