@@ -1,0 +1,23 @@
+# מפתחות — לעולם לא
+.env
+
+# הדאטה של המשתמש — פרטית, לא עולה לשום מקום
+business-context.md
+context/
+swot-settings.md
+competitors.md
+.cache/
+outputs/
+research/
+snapshots/
+
+# תיקיית הצילום — לא חלק מהחבילה
+demo/
+.filming/
+
+# מערכת
+.DS_Store
+node_modules/
+
+# התסריט — פנימי, לא לריפו הציבורי
+*תסריט*

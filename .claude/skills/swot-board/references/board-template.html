@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SWOT</title>
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#1c1b18; --muted:#6b675e; --line:#e2ded4;
+    --s:#2e7d5b; --w:#b8741a; --o:#2f5fa8; --t:#7a4fa3;
+    --red:#c8322b; --red-bg:#fbe9e7;
+    --tag:#efece5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,"Segoe UI",Arial,"Noto Sans Hebrew",sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
+  header h1{margin:0 0 4px;font-size:30px}
+  header .date{color:var(--muted);font-size:14px}
+  .coverage{margin:18px 0 8px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-right:5px solid var(--ink);border-radius:8px}
+  .coverage b{display:block;margin-bottom:4px}
+  .coverage .warn{color:var(--w)}
+  .counter{color:var(--muted);font-size:14px;margin:0 0 22px}
+  .tabs{display:flex;gap:8px;margin:10px 0 18px}
+  .tabs[hidden],[hidden]{display:none!important}
+  .tabs button{border:1px solid var(--line);background:var(--card);padding:8px 16px;border-radius:999px;cursor:pointer;font:inherit}
+  .tabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:760px){.grid{grid-template-columns:1fr}}
+  .quad{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;border-top:5px solid var(--ink)}
+  .quad.S{border-top-color:var(--s)} .quad.W{border-top-color:var(--w)} .quad.O{border-top-color:var(--o)} .quad.T{border-top-color:var(--t)}
+  .quad h2{margin:0 0 10px;font-size:19px;display:flex;align-items:center;gap:8px}
+  .help{position:relative;display:inline-block;width:20px;height:20px;border-radius:50%;background:var(--tag);font-size:12px;text-align:center;line-height:20px;cursor:help;font-weight:400}
+  .help::after{content:attr(data-tip);position:absolute;right:0;top:26px;width:280px;background:var(--ink);color:#fff;font-size:13px;line-height:1.45;padding:10px 12px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:5;font-weight:400}
+  .help:hover::after{opacity:1}
+  .item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+  .item:first-of-type{border-top:0}
+  .item .txt{flex:1}
+  .item .txt.imp{font-style:italic;color:#3a3833}
+  .dots{white-space:nowrap;letter-spacing:2px;color:var(--ink);font-size:13px;padding-top:4px}
+  .dots .off{color:var(--line)}
+  .tag{font-size:12px;background:var(--tag);padding:2px 8px;border-radius:999px;color:var(--muted);white-space:nowrap;text-decoration:none;margin-top:3px}
+  a.tag{color:var(--o);border:1px solid #cfdbef;background:#eef3fb}
+  .empty{color:var(--muted);font-size:14px;padding:8px 0}
+  section.moves{margin-top:34px}
+  section.moves h2{font-size:22px;margin:0 0 6px}
+  .order-note{color:var(--muted);font-size:14px;margin:0 0 12px}
+  .tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;min-width:760px}
+  th,td{padding:11px 12px;text-align:right;vertical-align:top;border-bottom:1px solid var(--line);font-size:15px}
+  th{font-size:13px;color:var(--muted);font-weight:600;background:#faf9f6}
+  tr:last-child td{border-bottom:0}
+  .type{display:inline-block;padding:3px 9px;border-radius:6px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+  .type.SxO{background:var(--s)} .type.WxO{background:var(--w)} .type.SxT{background:var(--o)} .type.WxT{background:var(--red)}
+  tr.redline td{background:var(--red-bg)}
+  tr.redline td:first-child{border-right:5px solid var(--red)}
+  .basis{font-size:13px;color:var(--muted)}
+  .basis span{border-bottom:1px dotted var(--muted);cursor:help}
+  tr.done td .action{text-decoration:line-through;color:var(--muted)}
+  .changes .block{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .changes h3{margin:0 0 8px;font-size:17px}
+  .changes ul{margin:0;padding-right:18px}
+  .changes li{margin:4px 0}
+  .changes .worked{color:var(--s);font-weight:600}
+  .changes .stuck{color:var(--red);font-weight:600}
+  details.panel{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px}
+  details.panel summary{cursor:pointer;font-weight:600}
+  .panel .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:10px 0}
+  .panel label{font-size:14px}
+  .panel button{font:inherit;font-size:14px;padding:6px 12px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer}
+  footer{margin-top:30px;color:var(--muted);font-size:13px}
+  @media print{
+    body{background:#fff} .tabs,details.panel,input[type=checkbox]{display:none!important}
+    .quad,.tablewrap{break-inside:avoid;border-color:#bbb}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="biz"></h1>
+    <div class="date" id="date"></div>
+  </header>
+
+  <div class="coverage" id="coverage"></div>
+  <p class="counter" id="counter"></p>
+
+  <div class="tabs" id="tabs" hidden>
+    <button data-tab="board">הלוח</button>
+    <button data-tab="changes">מה זז</button>
+  </div>
+
+  <div id="view-board">
+    <div class="grid">
+      <div class="quad S"><h2>חוזקות <span class="help" data-tip="מה שיש לך ולמתחרים אין, מגובה בקונטקסט, בראיון או באתר של מתחרה. לא מה שכל מתחרה אומר על עצמו.">?</span></h2><div id="q-S"></div></div>
+      <div class="quad W"><h2>חולשות <span class="help" data-tip="פנימי ובשליטתך: מה בפועל נופל בגללו. תלות בלקוח אחד היא חולשה. מה שיקרה לתלות הזאת מבחוץ הוא איום.">?</span></h2><div id="q-W"></div></div>
+      <div class="quad O"><h2>הזדמנויות <span class="help" data-tip="חיצוני: פער שנמצא אצל המתחרים, או משהו שאתה רואה ולא מנצל. בלי מגמות שוק בלי מקור.">?</span></h2><div id="q-O"></div></div>
+      <div class="quad T"><h2>איומים <span class="help" data-tip="חיצוני ולא בשליטתך: מה שמתחרה עושה טוב, או מה שיכול לקרות לתלות שלך. לא תרחישי אימה כלליים.">?</span></h2><div id="q-T"></div></div>
+    </div>
+
+    <section class="moves">
+      <h2>מהלכים</h2>
+      <p class="order-note">הסדר הוא סדר טיפול (השפעה × מהירות ביצוע), לא תחזית הצלחה. קו אדום מוצג תמיד.</p>
+      <div class="tablewrap"><table id="moves"></table></div>
+    </section>
+  </div>
+
+  <div id="view-changes" class="changes" hidden></div>
+
+  <details class="panel">
+    <summary>הגדרות</summary>
+    <div class="row">
+      <label><input type="checkbox" class="flt" value="SxO" checked> לדחוף (S×O)</label>
+      <label><input type="checkbox" class="flt" value="WxO" checked> לתקן כדי לנצל (W×O)</label>
+      <label><input type="checkbox" class="flt" value="SxT" checked> להגן (S×T)</label>
+      <label><input type="checkbox" id="showImp" checked> הצג התרשמויות</label>
+      <button id="resetDone">אפס סימוני בוצע</button>
+      <button onclick="window.print()">הדפסה</button>
+    </div>
+  </details>
+
+  <footer>לכל פריט יש מקור. אין מקור, אין פריט.</footer>
+</div>
+
+<script>
+/* ===== DATA — מוזרק ע"י הסקיל. זה הפלט, לא המקור. ===== */
+const DATA = /*DATA*/{}/*/DATA*/;
+/* ===================================================== */
+
+const TYPE_LABEL = {SxO:"S×O לדחוף", WxO:"W×O לתקן כדי לנצל", SxT:"S×T להגן", WxT:"W×T קו אדום"};
+const SPEED = {fast:["מהיר",3], medium:["בינוני",2], heavy:["כבד",1]};
+const Q_NAMES = {S:"חוזקות",W:"חולשות",O:"הזדמנויות",T:"איומים"};
+const KEY = "swot-board:" + (DATA.business||"");
+let state = {done:{}, filters:{SxO:true,WxO:true,SxT:true}, showImp:true};
+try{ const s = localStorage.getItem(KEY); if(s) state = Object.assign(state, JSON.parse(s)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function esc(s){ return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function dots(n){ let h=""; for(let i=1;i<=3;i++) h += i<=n ? "●" : '<span class="off">●</span>'; return '<span class="dots" title="עוצמה '+n+'/3">'+h+'</span>'; }
+function host(u){ try{ return new URL(u).hostname.replace(/^www\./,""); }catch(e){ return u; } }
+function itemById(id){ for(const q of "SWOT"){ const f=(DATA.quadrants[q]||[]).find(x=>x.id===id); if(f) return f; } return null; }
+
+/* ראש */
+document.getElementById("biz").textContent = "SWOT · " + (DATA.business||"");
+document.getElementById("date").textContent = "נבנה " + (DATA.generatedAt||DATA.date||"");
+(function(){
+  const c = DATA.coverage||{};
+  let h = "<b>על מה הלוח מבוסס</b>";
+  h += "נבדקו " + (c.competitors??0) + " מתחרים · " + (c.sitesRead??0) + " אתרים נקראו · ";
+  h += c.socialScanned ? "הרשתות נסרקו" : '<span class="warn">הרשתות של המתחרים לא נסרקו' + (c.socialReason? " ("+esc(c.socialReason)+")":"") + ' - הניתוח מבוסס על אתרים ותוכן ציבורי</span>';
+  if((c.skippedQuestions||[]).length) h += "<br>שאלות שדולגו בראיון: " + c.skippedQuestions.map(esc).join(" · ");
+  if((c.competitors??0)===1) h += "<br>הניתוח מבוסס על מתחרה אחד - אין הכללה של דפוסי שוק.";
+  document.getElementById("coverage").innerHTML = h;
+  const q = DATA.quadrants||{};
+  const srcs = new Set(), links = new Set();
+  for(const k of "SWOT") (q[k]||[]).forEach(i=>{ srcs.add(i.url||i.source); if(i.url) links.add(i.url); });
+  document.getElementById("counter").textContent =
+    (q.S||[]).length+" חוזקות · "+(q.W||[]).length+" חולשות · "+(q.O||[]).length+" הזדמנויות · "+(q.T||[]).length+" איומים · "+srcs.size+" מקורות, מהם "+links.size+" עם קישור";
+})();
+
+/* משבצות */
+function renderQuads(){
+  for(const k of "SWOT"){
+    const el = document.getElementById("q-"+k);
+    const items = (DATA.quadrants[k]||[]).filter(i => state.showImp || i.kind!=="impression");
+    if(!items.length){ el.innerHTML = '<div class="empty">לא נמצאו פריטים - ראה שורת הכיסוי</div>'; continue; }
+    el.innerHTML = items.map(i=>{
+      const imp = i.kind==="impression";
+      const tag = i.url ? '<a class="tag" target="_blank" rel="noopener" href="'+esc(i.url)+'">'+esc(host(i.url))+'</a>' : '<span class="tag">'+esc(i.source||"")+'</span>';
+      return '<div class="item" data-id="'+esc(i.id)+'">'+dots(i.strength||1)+'<div class="txt'+(imp?" imp":"")+'">'+(imp?"נראה ש-":"")+esc(i.text)+'</div>'+tag+'</div>';
+    }).join("");
+  }
+}
+
+/* מהלכים */
+function score(m){ return (m.impact||1) * (SPEED[m.speed]?.[1]||1); }
+function renderMoves(){
+  const moves = (DATA.moves||[]).slice().sort((a,b)=>score(b)-score(a));
+  let h = "<thead><tr><th>#</th><th>סוג</th><th>מה עושים</th><th>על סמך מה</th><th>השפעה</th><th>מהירות</th><th>✔</th></tr></thead><tbody>";
+  let n = 0;
+  for(const m of moves){
+    if(m.type!=="WxT" && state.filters[m.type]===false) continue;
+    n++;
+    const done = !!state.done[m.id];
+    const basis = (m.basis||[]).map(id=>{ const it=itemById(id); const t = it? it.text : id; return '<span title="'+esc(t)+'">'+esc(id)+' '+esc(t.length>38? t.slice(0,38)+"…" : t)+'</span>'; }).join(" + ");
+    h += '<tr class="'+(m.type==="WxT"?"redline ":"")+(done?"done":"")+'" data-id="'+esc(m.id)+'">'
+      + '<td>'+n+'</td><td><span class="type '+esc(m.type)+'">'+TYPE_LABEL[m.type]+'</span></td>'
+      + '<td class="action">'+esc(m.action)+'</td><td class="basis">'+basis+'</td>'
+      + '<td>'+dots(m.impact||1)+'</td><td>'+(SPEED[m.speed]?.[0]||m.speed)+'</td>'
+      + '<td><input type="checkbox" class="doneBox" data-id="'+esc(m.id)+'" '+(done?"checked":"")+'></td></tr>';
+  }
+  if(!n) h += '<tr><td colspan="7" class="empty">אין מהלכים להצגה בסינון הזה</td></tr>';
+  document.getElementById("moves").innerHTML = h + "</tbody>";
+  document.querySelectorAll(".doneBox").forEach(b=>b.addEventListener("change",e=>{ state.done[e.target.dataset.id]=e.target.checked; save(); renderMoves(); }));
+}
+
+/* מה זז */
+function renderChanges(){
+  const P = DATA.previous; if(!P) return;
+  const wrap = document.getElementById("view-changes");
+  const added=[], gone=[], changed=[];
+  for(const k of "SWOT"){
+    const now = DATA.quadrants[k]||[], was = (P.quadrants||{})[k]||[];
+    now.forEach(i=>{ const w = was.find(x=>x.id===i.id); if(!w) added.push([k,i]); else if((w.strength||0)!==(i.strength||0)) changed.push([k,w,i]); });
+    was.forEach(w=>{ if(!now.find(x=>x.id===w.id)) gone.push([k,w]); });
+  }
+  let h = '<div class="block"><h3>מול הסנפשוט מ-'+esc(P.date||"")+'</h3><p style="margin:0;color:var(--muted)">מה נוסף, מה נעלם, מה זז, ומה קרה למהלכים שסומנו בוצעו.</p></div>';
+  h += '<div class="block"><h3>נוסף</h3>' + (added.length? "<ul>"+added.map(([k,i])=>"<li><b>"+Q_NAMES[k]+":</b> "+esc(i.text)+" "+dots(i.strength)+"</li>").join("")+"</ul>" : '<div class="empty">לא נוסף פריט</div>') + '</div>';
+  h += '<div class="block"><h3>נעלם</h3>' + (gone.length? "<ul>"+gone.map(([k,i])=>"<li><b>"+Q_NAMES[k]+":</b> "+esc(i.text)+(k==="W"?" - חולשה שנעלמה, מה שינית?":"")+"</li>").join("")+"</ul>" : '<div class="empty">לא נעלם פריט</div>') + '</div>';
+  h += '<div class="block"><h3>התחזק / נחלש</h3>' + (changed.length? "<ul>"+changed.map(([k,w,i])=>"<li><b>"+Q_NAMES[k]+":</b> "+esc(i.text)+" - מ-"+w.strength+" ל-"+i.strength+"</li>").join("")+"</ul>" : '<div class="empty">אין שינוי עוצמה</div>') + '</div>';
+  const doneMoves = (P.moves||[]).filter(m=>m.done);
+  h += '<div class="block"><h3>מהלכים שסומנו בוצעו</h3>';
+  if(!doneMoves.length) h += '<div class="empty">לא סומן מהלך כבוצע בסנפשוט הקודם</div>';
+  else h += "<ul>" + doneMoves.map(m=>{
+    const notes = (m.basis||[]).map(id=>{
+      const before = (()=>{ for(const k of "SWOT"){ const f=((P.quadrants||{})[k]||[]).find(x=>x.id===id); if(f) return {k,f}; } return null; })();
+      const after = itemById(id);
+      if(!before) return null;
+      if(!after) return {id, verdict:"gone", txt: before.f.text};
+      if((after.strength||0) < (before.f.strength||0)) return {id, verdict:"down", txt: after.text, from: before.f.strength, to: after.strength};
+      if((after.strength||0) > (before.f.strength||0)) return {id, verdict:"up", txt: after.text, from: before.f.strength, to: after.strength};
+      return {id, verdict:"same", txt: after.text};
+    }).filter(Boolean);
+    const improved = notes.some(n=>n.verdict==="gone"||n.verdict==="down");
+    const worse = notes.some(n=>n.verdict==="up");
+    let line = "<li><b>"+esc(m.action)+"</b><br>";
+    if(improved && !worse) line += '<span class="worked">המהלך עבד</span> - ' + notes.filter(n=>n.verdict!=="same").map(n=> n.verdict==="gone" ? "\""+esc(n.txt)+"\" נעלם" : "\""+esc(n.txt)+"\" ירד מ-"+n.from+" ל-"+n.to).join("; ");
+    else if(worse) line += '<span class="stuck">נעשה גרוע יותר</span> - ' + notes.filter(n=>n.verdict==="up").map(n=>"\""+esc(n.txt)+"\" עלה מ-"+n.from+" ל-"+n.to).join("; ");
+    else line += '<span class="stuck">המהלך סומן בוצע, אבל הפריטים לא זזו</span> - ' + notes.map(n=>"\""+esc(n.txt)+"\"").join(" ו-") + ". שווה לבדוק אם הוא באמת בוצע, או שהוא לא היה המהלך הנכון.";
+    return line + "</li>";
+  }).join("") + "</ul>";
+  h += '</div>';
+  wrap.innerHTML = h;
+}
+
+/* טאבים ופאנל */
+(function(){
+  const tabs = document.getElementById("tabs");
+  if(DATA.previous){
+    tabs.hidden = false;
+    const show = t => { document.getElementById("view-board").hidden = t!=="board"; document.getElementById("view-changes").hidden = t!=="changes"; tabs.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.tab===t)); };
+    tabs.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.tab)));
+    renderChanges(); show("changes");
+  }
+  document.querySelectorAll(".flt").forEach(c=>{ c.checked = state.filters[c.value]!==false; c.addEventListener("change",e=>{ state.filters[e.target.value]=e.target.checked; save(); renderMoves(); }); });
+  const si = document.getElementById("showImp"); si.checked = state.showImp!==false; si.addEventListener("change",e=>{ state.showImp=e.target.checked; save(); renderQuads(); });
+  document.getElementById("resetDone").addEventListener("click",()=>{ state.done={}; save(); renderMoves(); });
+})();
+renderQuads(); renderMoves();
+</script>
+</body>
+</html>
